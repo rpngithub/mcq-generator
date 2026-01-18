@@ -9,8 +9,8 @@ app = FastAPI(title="Multilingual Q&A Generator")
 # Multilingual Q&A (mT5 or similar)
 qa_pipeline = pipeline("question-answering", model="deepset/xlm-roberta-base-squad2")
 
-# Multilingual question generation (optional, experimental)
-qg_pipeline = pipeline("text2text-generation", model="valhalla/t5-base-qa-qg-hl")
+# Multilingual question generation (updated to mT5 multilingual model)
+qg_pipeline = pipeline("text2text-generation", model="givealittle/mT5-large-qa-qg-hl")
 
 # Translation (OPUS-MT, example: English to French)
 from transformers import MarianMTModel, MarianTokenizer
@@ -49,7 +49,7 @@ def get_answer(q: QARequest):
 
 @app.post("/question")
 def generate_question(req: QGRequest):
-    # Generate question from context (returns English by default)
+    # Generate question from context (now supports many languages!)
     result = qg_pipeline(f"generate question: {req.context}")
     question = result[0]['generated_text']
     # Translate if needed
